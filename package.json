@@ -6,12 +6,12 @@
   "author": "",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/amraei/lightua.git"
+    "url": "git+https://github.com/omidamraei/lightua"
   },
   "bugs": {
-    "url": "https://github.com/amraei/lightua/issues"
+    "url": "https://github.com/omidamraei/lightua/issues"
   },
-  "homepage": "https://github.com/amraei/lightua#readme",
+  "homepage": "https://github.com/omidamraei/lightua#readme",
   "type": "module",
   "sideEffects": false,
   "exports": {
