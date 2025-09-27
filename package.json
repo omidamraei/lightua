@@ -1,6 +1,6 @@
 {
   "name": "lightua",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Lightweight, fast user-agent parser (TypeScript, zero deps).",
   "license": "MIT",
   "author": "",
