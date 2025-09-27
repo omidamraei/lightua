@@ -114,16 +114,63 @@ export function detectEngine(ua: string): {
 
 export function detectOS(ua: string): OSInfo {
   let m: RegExpExecArray | null;
+  const is64 = /\b(?:x86_64|x64|Win64|WOW64|amd64|arm64|aarch64)\b/i.test(ua);
+
   if ((m = rx.windows.exec(ua)))
-    return { name: "Windows", version: winVersionName(normVer(m[1])) };
-  if ((m = rx.ios.exec(ua))) return { name: "iOS", version: normVer(m[1]) };
-  if ((m = rx.macos.exec(ua))) return { name: "macOS", version: normVer(m[1]) };
+    return {
+      name: "Windows",
+      version: winVersionName(normVer(m[1])),
+      is64Bit: is64,
+    };
+
+  if ((m = rx.ios.exec(ua)))
+    return { name: "iOS", version: normVer(m[1]), is64Bit: is64 };
+
+  if ((m = rx.macos.exec(ua)))
+    return { name: "macOS", version: normVer(m[1]), is64Bit: is64 };
+
   if ((m = rx.android.exec(ua)))
-    return { name: "Android", version: normVer(m[1]) };
+    return { name: "Android", version: normVer(m[1]), is64Bit: is64 };
+
   if ((m = rx.chromeOS.exec(ua)))
-    return { name: "ChromeOS", version: normVer(m[1]) };
-  if (has(ua, "Linux")) return { name: "Linux", version: "" };
-  return { name: "Unknown", version: "" };
+    return { name: "ChromeOS", version: normVer(m[1]), is64Bit: is64 };
+
+  // ---- Linux & distros ----
+  const l = ua.toLowerCase();
+
+  // Order matters: check more specific / common vendor tokens first
+  // Uses substring checks only for performance.
+  const distro: OSName | null =
+    (l.includes("ubuntu") && "Ubuntu") ||
+    (l.includes("pop!_os") || l.includes("popos") ? "Pop!_OS" : null) ||
+    (l.includes("linux mint") && "Linux Mint") ||
+    (l.includes("fedora") && "Fedora") ||
+    (l.includes("debian") && "Debian") ||
+    (l.includes("arch") && "Arch") ||
+    (l.includes("manjaro") && "Manjaro") ||
+    ((l.includes("opensuse") || l.includes("open suse")) && "openSUSE") ||
+    (l.includes("suse") && "SUSE") ||
+    (l.includes("centos") && "CentOS") ||
+    (l.includes("red hat") || l.includes("redhat") || l.includes("rhel")
+      ? "Red Hat"
+      : null) ||
+    (l.includes("elementary") && "elementary OS") ||
+    (l.includes("kali") && "Kali Linux") ||
+    (l.includes("zorin") && "Zorin OS") ||
+    (l.includes("deepin") && "Deepin") ||
+    (l.includes("gentoo") && "Gentoo") ||
+    (l.includes("endeavouros") && "EndeavourOS") ||
+    null;
+
+  if (l.includes("linux") || distro) {
+    return {
+      name: distro ?? "Linux",
+      version: "",
+      is64Bit: is64,
+    };
+  }
+
+  return { name: "Unknown", version: "", is64Bit: is64 };
 }
 
 export function detectDevice(ua: string, osName: OSName): DeviceInfo {

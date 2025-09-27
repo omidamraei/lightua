@@ -17,8 +17,25 @@ export type OSName =
   | "macOS"
   | "iOS"
   | "Android"
-  | "Linux"
   | "ChromeOS"
+  | "Ubuntu"
+  | "Debian"
+  | "Fedora"
+  | "Arch"
+  | "Manjaro"
+  | "openSUSE"
+  | "SUSE"
+  | "CentOS"
+  | "Red Hat"
+  | "Linux Mint"
+  | "elementary OS"
+  | "Pop!_OS"
+  | "Kali Linux"
+  | "Zorin OS"
+  | "Deepin"
+  | "Gentoo"
+  | "EndeavourOS"
+  | "Linux"
   | "Unknown";
 
 export type DeviceType = "desktop" | "mobile" | "tablet" | "bot" | "unknown";
@@ -34,6 +51,7 @@ export interface BrowserInfo {
 export interface OSInfo {
   name: OSName;
   version: string;
+  is64Bit?: boolean;
 }
 
 export interface DeviceInfo {
