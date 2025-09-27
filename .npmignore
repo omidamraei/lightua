@@ -1,0 +1,23 @@
+# Ignore source and configs
+src/
+tsconfig.json
+tsup.config.ts
+
+# Ignore lock files
+yarn.lock
+pnpm-lock.yaml
+
+# Ignore tests and coverage
+__tests__/
+*.test.ts
+coverage/
+
+# Ignore build artifacts
+dist/*.map
+*.log
+
+# Ignore GitHub workflows
+.github/
+
+# Misc
+.DS_Store
