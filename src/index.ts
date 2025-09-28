@@ -1,4 +1,5 @@
 // src/index.ts
+export { default } from "./useragent";
 export { default as UserAgent } from "./useragent";
 export type {
   BrowserName,

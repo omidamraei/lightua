@@ -1,30 +1,100 @@
-name: Publish to npm
+name: Release & Publish
 
 on:
   push:
     tags:
-      - "v*.*.*" # e.g., v0.1.0
+      - "v*.*.*" # push tags like v0.0.4
 
 jobs:
-  publish:
+  test:
+    name: Build & Test (from tag)
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write # required for npm provenance
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout (with tags)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Sync version from git tag
+        run: |
+          npm version from-git --no-git-tag-version
+          node -e "console.log('package.json version:', require('./package.json').version)"
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Pack tarball
+        run: npm pack --json > pack.json
+
+      - name: Consumer smoke tests (ESM/CJS + functionality)
+        run: |
+          TARBALL=$(node -e "console.log(JSON.parse(require('fs').readFileSync('pack.json','utf8'))[0].filename)")
+          echo "Packed: $TARBALL"
+
+          mkdir -p /tmp/lightua-consumer && cd /tmp/lightua-consumer
+          npm init -y >/dev/null 2>&1
+          npm i "$GITHUB_WORKSPACE/$TARBALL"
+
+          # ESM default import
+          node --input-type=module -e "import LightUA from 'lightua'; if(!LightUA) { console.error('ESM default export missing'); process.exit(1); }"
+
+          # CJS require
+          node -e "const LightUA = require('lightua'); if(!LightUA) { console.error('CJS default export missing'); process.exit(1); }"
+
+          # Functional check on built package
+          node --input-type=module -e "import LightUA from 'lightua'; const ua='Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:143.0) Gecko/20100101 Firefox/143.0'; const r=LightUA.parse(ua); if(!(r.os?.name==='Ubuntu' && r.os?.is64Bit===true)) { console.error('Functional check failed:', r); process.exit(1); }"
+
+  publish:
+    name: Publish to npm
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write   # required for npm provenance
+    steps:
+      - name: Checkout (with tags)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node (npm registry)
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           registry-url: "https://registry.npmjs.org"
           cache: npm
 
-      - run: npm ci
-      - run: npm run typecheck
-      - run: npm run build
+      - name: Install deps
+        run: npm ci
 
-      # prepublishOnly already runs build; keeping explicit build above for clarity
+      - name: Sync version from git tag
+        run: |
+          npm version from-git --no-git-tag-version
+          node -e "console.log('package.json version:', require('./package.json').version)"
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build
+
       - name: Publish
         run: npm publish --provenance --access public
         env:
