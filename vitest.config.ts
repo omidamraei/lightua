@@ -5,6 +5,7 @@ export default defineConfig({
     environment: "node",
     include: ["tests/**/*.test.ts"],
     watch: false,
-    reporters: "default"
+    reporters: "default",
+    setupFiles: ['tests/setup.ts'],
   }
 });

@@ -34,6 +34,9 @@ pnpm add lightua
 yarn add lightua
 ```
 
+> **Requirements:** Node.js **16.20 or later**
+> (Tested on Node 16.20, 18, and 20)
+
 ---
 
 ## 🛠️ Usage

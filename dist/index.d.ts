@@ -37,4 +37,4 @@ declare class UserAgent {
     static parse(ua?: string): UserAgent;
 }
 
-export { type BrowserInfo, type BrowserName, type DeviceInfo, type DeviceType, type EngineName, type OSInfo, type OSName, UserAgent };
+export { type BrowserInfo, type BrowserName, type DeviceInfo, type DeviceType, type EngineName, type OSInfo, type OSName, UserAgent, UserAgent as default };
