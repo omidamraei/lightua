@@ -39,7 +39,8 @@ yarn add lightua
 ## 🛠️ Usage
 
 ```ts
-import { UserAgent } from "lightua";
+import UserAgent from "lightua";
+// or import { UserAgent } from "lightua";
 
 // Example: use current browser's UA string
 const ua = UserAgent.parse(navigator.userAgent);
@@ -93,8 +94,11 @@ Parses a user-agent string. Defaults to empty string if not provided.
 
 - **`.os`** → `OSInfo`
   ```ts
-  { name: "Windows" | "macOS" | "iOS" | "Android" | "Linux" | "ChromeOS" | "Unknown",
-    version: string }
+  { 
+    name: "Windows" | "macOS" | "iOS" | "Android" | "Linux" | "ChromeOS" | "Unknown",
+    is65Bit: boolean,
+    version: string 
+  }
   ```
 
 - **`.device`** → `DeviceInfo`
