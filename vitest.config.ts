@@ -6,6 +6,5 @@ export default defineConfig({
     include: ["tests/**/*.test.ts"],
     watch: false,
     reporters: "default",
-    setupFiles: ['tests/setup.ts'],
   }
 });
