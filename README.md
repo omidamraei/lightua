@@ -17,7 +17,7 @@ It detects browser, engine, OS, device type, and bots — with performance as th
 - 🔒 Fully typed (TypeScript, strict mode)
 - 🌍 Works in **Node.js, browsers, and workers**
 
-**1.9 kB (minified + gzipped)** — verified via [Bundlephobia](https://bundlephobia.com/package/lightua@0.0.2).
+**2.2 kB (minified + gzipped)** — verified via [Bundlephobia](https://bundlephobia.com/package/lightua@0.1.0).
 
 ---
 
